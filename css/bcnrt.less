@@ -1,0 +1,334 @@
+@import 'variables.less';
+@import 'mixins.less';
+@import '../components/select2/select2.css';
+
+/* Reseter */
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    cursor:default;
+    #font > .sans-serif(12px, 200, 1em);
+    padding: 0;
+    margin: 0;
+    background-color: @black;
+    * {
+        .box-sizing(border-box);
+    }
+}
+
+
+.bcnRT {
+    .square(100%);
+    .wrapper {
+        position: relative;
+        .center-block;
+        .square(100%);
+        max-width: 1200px;
+        header{
+            position: absolute;
+            z-index: 9;
+            width: 100%;
+            background-color: @boxBg;
+            padding: 10px 20px;
+            h1 {
+                float: left;
+                #font > .serif(20px, 700, 1.5em);
+                color: @white;
+                span {
+                    #font > .sans-serif(15px, 300, 1.5em);
+                }
+            }
+            .selector-holder {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: @gray;
+                padding: 10px 20px;
+                h4 {
+                    float: left;
+                    color: @white;
+                    #font > .sans-serif(15px, 300, 2em);
+                    margin-right: 10px;
+                }
+                .select2-choice {
+                    border: none;
+                    .border-radius(0px);
+                    text-transform: uppercase;
+                    font-size: 13px;
+                    height: 30px;
+                    line-height: 30px;
+                }
+                .select2-container {
+                    .select2-choice{
+                        background: @grayLighter;
+                        >div {
+                            border-left: 1px dotted @gray;
+                            .border-radius(0px);
+                            background: @grayLighter;
+                        }
+                    }
+                }
+            }
+        }
+        .chartContent {
+            .square(100%);
+            background: #333 url(../img/bcn_back_map.png) no-repeat 50% 50%;
+            .background-clip(border-box);
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+        .zonaInfo {
+            position: absolute;
+            right: 20px;
+            bottom: 40px;
+            padding-left:8px;
+            color: @white;
+            background-color: @boxBg;
+            .legend {
+                h4 {
+                    padding-top: 10px;
+                    #font > .serif(14px, 700, 1.5em);
+                }            
+                .legendContent {
+                    margin-top: -15px;
+                }
+            }
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            clear: both;
+            background-color: rgba(0,0,0,.4);
+            padding: 5px 20px;
+            p {
+                color: @white;
+            }
+        }
+    }
+}
+.select2-drop {
+    border: none;
+    .border-radius(0px);
+    background: @grayLighter;
+    .select2-results {
+        padding: 0;
+        margin: 0;
+        li {
+            &:hover {
+                background: @grayLight;
+            }
+        }
+        .select2-highlighted {
+            background: @grayDark;
+        }
+    }
+}
+
+.netChartTextWarning
+{
+    fill: #FFF;
+}
+.bcnRT .nodes
+{
+    fill: #770;
+    /*cursor:pointer;*/
+    stroke: #000;
+    stroke-width: 0.03;
+    stroke-opacity: 1.0;
+}
+
+.bcnRT .links
+{
+    stroke: #777;
+    stroke-width: .05px;
+}
+
+.bcnRT .label
+{
+        fill: #777;
+}
+
+.bcnRT .zonaFecha
+{
+    height: 40px;
+    color: #FFF;
+    padding-top:5px;
+    padding-left:30px;
+    padding-right: 30px;
+}
+
+.bcnRT .zonaFecha .play
+{
+    float:left;
+    cursor:pointer;
+}
+
+.bcnRT .zonaFecha .slider
+{
+    float:left;
+    min-width: 76%;
+    margin-top:15px;
+    margin-left:20px;
+    margin-right:20px;
+    background-color: #eee;
+}
+
+.bcnRT .zonaFecha .fechaText
+{
+    margin-top:5px;
+    font-size:20px;
+}
+
+
+.bcnRT .zonaChart
+{
+    float:left;
+
+}
+.bcnRT .netInfoContent
+{
+    font-size:12px;
+    margin-top:10px;
+    min-height: 40px;
+}
+
+
+
+
+
+.bcnRT .zonaFecha .ui-slider-horizontal {
+    height: .15em;
+    cursor: pointer;
+}
+
+.bcnRT .zonaFecha .ui-widget-content {
+    border: 0px solid #AAA;
+    background-color: #CCC;
+}
+
+.bcnRT .zonaFecha .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br
+{
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.bcnRT .zonaFecha .ui-slider .ui-slider-handle
+{
+  cursor:pointer;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left:0px;
+  margin-top:2.5px;
+}
+.ui-widget :focus { outline: none; }
+
+.bcnRT .opcionesHeader{
+    margin-top:10px;
+    #font > .serif(18px, 700, 1.25em);
+}
+    
+
+.bcnRT .newsHeader{
+    padding-top: 10px;
+    #font > .serif(18px, 700, 1.25em);
+}
+.bcnRT .newsContent{
+    font-size:12px;
+    min-height: 0px;
+    padding: 5px 5px 5px 5px;
+}
+
+.bcnRT .activeEvent
+{
+    background-color: #FFFFA5;
+    font-weight: bold;
+}
+
+.bcnRT .smallLegend
+{
+    font-size: 15px;
+    /*fill: #777;*/
+}
+
+.bcnRT .bigLegend
+{
+    font-size: 20px;
+    /*fill: #777;*/
+}
+
+.bcnRT a
+{
+    color: #777;
+}
+
+#infoDiv {
+    position:absolute;
+    color: #FFF;
+}
+
+.legendTexts
+{
+    fill: #FFF;
+}
+
+#mouseme
+{
+    cursor: pointer;
+}
+

@@ -1,0 +1,426 @@
+@import '../components/select2/select2.css';
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* Reseter */
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  cursor: default;
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 200;
+  line-height: 1em;
+  padding: 0;
+  margin: 0;
+  background-color: #000000;
+}
+body * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.bcnRT {
+  width: 100%;
+  height: 100%;
+}
+.bcnRT .wrapper {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+}
+.bcnRT .wrapper header {
+  position: absolute;
+  z-index: 9;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+}
+.bcnRT .wrapper header h1 {
+  float: left;
+  font-family: 'Source Sans Pro', Times, serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5em;
+  color: #f2f2f2;
+}
+.bcnRT .wrapper header h1 span {
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5em;
+}
+.bcnRT .wrapper header .selector-holder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #555555;
+  padding: 10px 20px;
+}
+.bcnRT .wrapper header .selector-holder h4 {
+  float: left;
+  color: #f2f2f2;
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 2em;
+  margin-right: 10px;
+}
+.bcnRT .wrapper header .selector-holder .select2-choice {
+  border: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  text-transform: uppercase;
+  font-size: 13px;
+  height: 30px;
+  line-height: 30px;
+}
+.bcnRT .wrapper header .selector-holder .select2-container .select2-choice {
+  background: #eeeeee;
+}
+.bcnRT .wrapper header .selector-holder .select2-container .select2-choice > div {
+  border-left: 1px dotted #555555;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  background: #eeeeee;
+}
+.bcnRT .wrapper .chartContent {
+  width: 100%;
+  height: 100%;
+  background: #333333 url(../img/bcn_back_map.png) no-repeat 50% 50%;
+  -webkit-background-clip: border-box;
+  -moz-background-clip: border-box;
+  background-clip: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.bcnRT .wrapper .zonaInfo {
+  position: absolute;
+  right: 20px;
+  bottom: 40px;
+  padding-left: 8px;
+  color: #f2f2f2;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.bcnRT .wrapper .zonaInfo .legend h4 {
+  padding-top: 10px;
+  font-family: 'Source Sans Pro', Times, serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5em;
+}
+.bcnRT .wrapper .zonaInfo .legend .legendContent {
+  margin-top: -15px;
+}
+.bcnRT .wrapper footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  clear: both;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 5px 20px;
+}
+.bcnRT .wrapper footer p {
+  color: #f2f2f2;
+}
+.select2-drop {
+  border: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  background: #eeeeee;
+}
+.select2-drop .select2-results {
+  padding: 0;
+  margin: 0;
+}
+.select2-drop .select2-results li:hover {
+  background: #999999;
+}
+.select2-drop .select2-results .select2-highlighted {
+  background: #333333;
+}
+.netChartTextWarning {
+  fill: #FFF;
+}
+.bcnRT .nodes {
+  fill: #770;
+  /*cursor:pointer;*/
+
+  stroke: #000;
+  stroke-width: 0.03;
+  stroke-opacity: 1.0;
+}
+.bcnRT .links {
+  stroke: #777;
+  stroke-width: .05px;
+}
+.bcnRT .label {
+  fill: #777;
+}
+.bcnRT .zonaFecha {
+  height: 40px;
+  color: #FFF;
+  padding-top: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.bcnRT .zonaFecha .play {
+  float: left;
+  cursor: pointer;
+}
+.bcnRT .zonaFecha .slider {
+  float: left;
+  min-width: 76%;
+  margin-top: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: #eee;
+}
+.bcnRT .zonaFecha .fechaText {
+  margin-top: 5px;
+  font-size: 20px;
+}
+.bcnRT .zonaChart {
+  float: left;
+}
+.bcnRT .netInfoContent {
+  font-size: 12px;
+  margin-top: 10px;
+  min-height: 40px;
+}
+.bcnRT .zonaFecha .ui-slider-horizontal {
+  height: .15em;
+  cursor: pointer;
+}
+.bcnRT .zonaFecha .ui-widget-content {
+  border: 0px solid #AAA;
+  background-color: #CCC;
+}
+.bcnRT .zonaFecha .ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+}
+.bcnRT .zonaFecha .ui-slider .ui-slider-handle {
+  cursor: pointer;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: 0px;
+  margin-top: 2.5px;
+}
+.ui-widget :focus {
+  outline: none;
+}
+.bcnRT .opcionesHeader {
+  margin-top: 10px;
+  font-family: 'Source Sans Pro', Times, serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25em;
+}
+.bcnRT .newsHeader {
+  padding-top: 10px;
+  font-family: 'Source Sans Pro', Times, serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25em;
+}
+.bcnRT .newsContent {
+  font-size: 12px;
+  min-height: 0px;
+  padding: 5px 5px 5px 5px;
+}
+.bcnRT .activeEvent {
+  background-color: #FFFFA5;
+  font-weight: bold;
+}
+.bcnRT .smallLegend {
+  font-size: 15px;
+  /*fill: #777;*/
+
+}
+.bcnRT .bigLegend {
+  font-size: 20px;
+  /*fill: #777;*/
+
+}
+.bcnRT a {
+  color: #777;
+}
+#infoDiv {
+  position: absolute;
+  color: #FFF;
+}
+.legendTexts {
+  fill: #FFF;
+}
+#mouseme {
+  cursor: pointer;
+}

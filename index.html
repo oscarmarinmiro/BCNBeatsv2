@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8">
+		<title>BCN Real Time</title>
+
+
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,200italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <!-- Estilos -->
+        <link href="css/bcnrt.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+         <!--[if lte IE 8]>
+             <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+         <![endif]-->
+
+        <!-- JS's -->
+        <script type="text/javascript" src="js/3rdparty/jquery.js"></script>
+        <script src="components/select2/select2.min.js"></script>
+
+        <script type="text/javascript" src="js/3rdparty/d3.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+        <script type="text/javascript" src="js/3rdparty/moment.min.js"></script>
+
+        <script type="text/javascript" src="js/lib/viz/bcnrt.js"></script>
+
+    </head>
+	<body>
+
+        <div id="bcnRT" class="bcnRT">
+            <script src="js/lib/controller/bcnrt.js" type="text/javascript"></script>
+            <script>
+                var scaleType = d3.scale.ordinal().domain(["bicing","traffic","foursquare","twitter","instagram"]).range(["#c3325f","#9d261d","#8DD3C7","#049cdb","#ffc40d"]);
+
+                var sizeScale =
+                {
+                    'foursquare': d3.scale.sqrt().domain([0,200]).range([0,30]).clamp(true),
+                    'traffic': d3.scale.linear().domain([0,4]).range([0,0.8]).clamp(true),
+                    'trafficW': d3.scale.linear().domain([0,4]).range([0,3]).clamp(true),
+                    'bicing': d3.scale.sqrt().domain([1,0]).range([0,5]).clamp(true),
+                    'twitter': d3.scale.sqrt().domain([1,0]).range([5,5]).clamp(true),
+                    'instagram': d3.scale.sqrt().domain([0,10]).range([5,5]).clamp(true)
+
+                };
+
+                var myBcnObj = beatsviz.controller.bcnRT(
+                        {
+                            'idName':"bcnRT",
+                            'className':"bcnRT",
+                            'baseJUrl':"data/",
+                            'imgPath':"img/",
+                            'urlBase': "http://assets.outliers.es/bcnrtweb/data.json",
+                            'scaleType':scaleType,
+                            'transTime':2000,
+                            'sizeScale':sizeScale,
+                            'refreshInt':30000,
+                            'debugLevel':1
+
+                        });
+            </script>
+
+        </div>
+
+	</body>
+</html>
+
+
