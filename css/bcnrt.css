@@ -189,23 +189,58 @@ body * {
 }
 .bcnRT .wrapper header {
   position: absolute;
+  opacity: 0.8;
   z-index: 9;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  /*background-color: rgba(0, 0, 0, 0.5);*/
   padding: 10px 20px;
+}
+
+#header2
+{
+  position: relative;
+  right:0px;
+  top:0px;
+  z-index: 9;
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  padding: 10px 20px;
+  float: right;
+  font-family: 'Open Sans', Times, serif;
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1.5em;
+  color: #f2f2f2;
+  opacity: 0.9;
+}
+
+#header3
+{
+  position: absolute;
+  right:0px;
+  top:50px;
+  z-index: 9;
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  padding: 10px 20px;
+  float: right;
+  font-family: 'Open Sans', Times, serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.5em;
+  color: #f2f2f2;
+  opacity: 0.9;
 }
 .bcnRT .wrapper header h1 {
   float: left;
-  font-family: 'Source Sans Pro', Times, serif;
-  font-size: 20px;
-  font-weight: 700;
+  font-family: 'Open Sans', Times, serif;
+  font-size: 40px;
+  font-weight: 300;
   line-height: 1.5em;
   color: #f2f2f2;
 }
 .bcnRT .wrapper header h1 span {
-  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 300;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 40px;
+  font-weight: 600;
   line-height: 1.5em;
 }
 .bcnRT .wrapper header .selector-holder {
