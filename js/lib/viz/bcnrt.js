@@ -36,7 +36,6 @@ beatsviz.viz.bcnRT =  function (options)
         self.svg = d3.select(self.parentSelect).append("svg")
             .attr("width",self.width)
             .attr("height",self.height)
-            .call(d3.behavior.zoom().on("zoom", self.redraw))
             .append("g");
 
         // projection and path info
@@ -49,15 +48,6 @@ beatsviz.viz.bcnRT =  function (options)
 
 	    self.path = d3.geo.path()
 	       .projection(self.projection);
-
-        var leftDisplacement = self.width/2 + 215;
-        var topDisplacement = self.height/2 + 88;
-
-        self.bcnLatlong = [];
-	    self.bcnPoints = [];
-
-	    self.markPointEspanya = [];
-	    self.markPointGlories = [];
 
 
         self.legendSVG = d3.select("#"+self.legendId).append("svg")
@@ -98,6 +88,9 @@ beatsviz.viz.bcnRT =  function (options)
             .text(self.loadingMessage);
 
 
+        self.dataLines = [];
+
+
 
     };
 
@@ -113,8 +106,7 @@ beatsviz.viz.bcnRT =  function (options)
 
         // Traffic
 
-            self.drawLines = [];
-            self.dataLines = [];
+            self.dataLines.length = 0;
 
 
             for(var i in self.data)
@@ -140,7 +132,7 @@ beatsviz.viz.bcnRT =  function (options)
 
 
 
-            self.lines = self.svg.selectAll("g")
+            self.lines = self.svg.selectAll(".lineDraw")
                                 .data(self.dataLines)
                                 .enter().append("svg:line")
                                     .attr("x1", function(d,j) {
@@ -178,8 +170,6 @@ beatsviz.viz.bcnRT =  function (options)
 
         // Bicing
 
-            self.drawPoints = [];
-            self.dataPoints = [];
 
 
             for(var i in self.data)
@@ -189,19 +179,12 @@ beatsviz.viz.bcnRT =  function (options)
                 if(point.type=='bicing')
                 {
 
-                    self.drawPoints.push(self.projection([point.geo.info.lng, point.geo.info.lat]));
-                    self.dataPoints.push(point);
-
-
-                    self.points = self.svg.selectAll("circle.bicing")
-                                .data(self.dataPoints)
-                                .enter().append("svg:circle")
+                    self.point = self.svg.append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][0]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-
-                                            return Math.floor(self.drawPoints[j][1]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
                                     })
                         .attr("r",0)
                         .style("opacity",0.7)
@@ -212,8 +195,8 @@ beatsviz.viz.bcnRT =  function (options)
 
 //                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.stationName+" - "+self.dataPoints[j].data.slots.free+" free slots";});
 
-                        self.points.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['bicing'];var point = self.dataPoints[j]; return Math.floor(scale(point.data.slots.occupation))});
+                        self.point.transition().duration(self.transTime)
+                        .attr("r", function(d,j){var scale= self.sizeScale['bicing']; return Math.floor(scale(point.data.slots.occupation))});
 
 
                 }
@@ -234,19 +217,13 @@ beatsviz.viz.bcnRT =  function (options)
                 if(point.type=='twitter')
                 {
 
-                    self.drawPoints.push(self.projection([point.geo.info.lng, point.geo.info.lat]));
-                    self.dataPoints.push(point);
 
-
-                    self.points = self.svg.selectAll("circle.twitter")
-                                .data(self.dataPoints)
-                                .enter().append("svg:circle")
+                    self.point = self.svg.append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][0]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-
-                                            return Math.floor(self.drawPoints[j][1]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
                                     })
                         .attr("r",0)
                         .style("opacity",0.7)
@@ -257,7 +234,7 @@ beatsviz.viz.bcnRT =  function (options)
 
 //                        self.points.append("title").text(function(d,j){return "@"+self.dataPoints[j].data.from_user+" - "+self.dataPoints[j].data.text;});
 
-                        self.points.transition().duration(self.transTime)
+                        self.point.transition().duration(self.transTime)
                         .attr("r", self.sizeScale['twitter'](1.0));
 
 
@@ -269,27 +246,19 @@ beatsviz.viz.bcnRT =  function (options)
 
         // Foursquare
 
-            self.drawPoints = [];
-            self.dataPoints = [];
-
-
             for(var i in self.data)
             {
                 var point = self.data[i];
 
                 if(point.type=='foursquare')
                 {
-                    self.drawPoints.push(self.projection([point.geo.info.lng, point.geo.info.lat]));
-                    self.dataPoints.push(point);
 
-                    self.points = self.svg.selectAll("circle.foursquare")
-                                .data(self.dataPoints)
-                                .enter().append("svg:circle")
+                    self.point = self.svg.append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][0]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][1]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
                                     })
                         .attr("r",0)
                         .style("opacity",0.15)
@@ -300,27 +269,20 @@ beatsviz.viz.bcnRT =  function (options)
 
 //                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.name + " - " + self.dataPoints[j].data.checkins+" checkins"});
 
-                        self.points.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['foursquare'];var point = self.dataPoints[j]; console.log(point.data.checkins);return Math.floor(scale(point.data.checkins))});
+                        self.point.transition().duration(self.transTime)
+                        .attr("r", function(d,j){var scale= self.sizeScale['foursquare'];return Math.floor(scale(point.data.checkins))});
 
-//        <animate attributeName="fill-opacity"
-//                      attributeType="XML"
-//                      values="0.03;0.04;0.03"
-//                      dur="4s"
-//                      repeatCount="indefinite"/>
 
 
                     var seed = 0.1+(Math.random()*0.05);
-                    self.points.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
+                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
 
-                    self.pointsSmall = self.svg.selectAll("circle.foursquareSmall")
-                                .data(self.dataPoints)
-                                .enter().append("svg:circle")
+                    self.pointSmall = self.svg.append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][0]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][1]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
                                     })
                         .attr("r",1)
                         .style("opacity",1.0)
@@ -340,9 +302,6 @@ beatsviz.viz.bcnRT =  function (options)
 
         // Instagram
 
-            self.drawPoints = [];
-            self.dataPoints = [];
-
 
             for(var i in self.data)
             {
@@ -352,17 +311,12 @@ beatsviz.viz.bcnRT =  function (options)
                 {
 
 
-                    self.drawPoints.push(self.projection([point.geo.info.lng, point.geo.info.lat]));
-                    self.dataPoints.push(point);
-
-                    self.points = self.svg.selectAll("circle.instagram")
-                                .data(self.dataPoints)
-                                .enter().append("svg:circle")
+                    self.point = self.svg.append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][0]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-                                            return Math.floor(self.drawPoints[j][1]);
+                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
                                     })
                         .attr("r",0)
                         .style("opacity",0.7)
@@ -382,12 +336,12 @@ beatsviz.viz.bcnRT =  function (options)
 //                            }
 //                        });
 
-                    var seed = 0.3+(Math.random()*0.1);
+//                    var seed = 0.3+(Math.random()*0.1);
 
 //                    self.points.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.6)+";"+seed).attr("dur","2s").attr("repeatCount","indefinite");
 
-                        self.points.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['instagram'];var point = self.dataPoints[j]; return Math.floor(scale(point.data.likes.count))});
+                    self.point.transition().duration(self.transTime)
+                        .attr("r", function(d,j){var scale= self.sizeScale['instagram']; return Math.floor(scale(point.data.likes.count))});
 
 
                 }
