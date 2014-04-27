@@ -282,7 +282,7 @@ body * {
 .bcnRT .wrapper .chartContent {
   width: 100%;
   height: 100%;
-  background: #333333 url(../img/bcn_back_map.png) no-repeat 50% 50%;
+  /*background: # url(../img/bcn_back_map.png) no-repeat 50% 50%;*/
   -webkit-background-clip: border-box;
   -moz-background-clip: border-box;
   background-clip: border-box;

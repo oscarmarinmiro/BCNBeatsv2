@@ -99,7 +99,8 @@ beatsviz.controller.bcnRT = function(options)
 
                // primer render
 
-               self.bcnChart.render(self.netData,self.dataIn);
+               self.bcnChart.render(self.netData);
+
                $('#showTime').html(moment().format('H:mm:ss'));
                $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
 
@@ -116,7 +117,7 @@ beatsviz.controller.bcnRT = function(options)
 
                                            // primer render
 
-                                           self.bcnChart.render(self.netData,self.dataIn);
+                                           self.bcnChart.render(self.netData);
 
                                            $('#showTime').html(moment().format('H:mm:ss'));
                                            $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
