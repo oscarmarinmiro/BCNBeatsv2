@@ -258,7 +258,7 @@ beatsviz.viz.bcnRT =  function (options)
 //                        self.points.append("title").text(function(d,j){return "@"+self.dataPoints[j].data.from_user+" - "+self.dataPoints[j].data.text;});
 
                         self.points.transition().duration(self.transTime)
-                        .attr("r", 5);
+                        .attr("r", self.sizeScale['twitter'](1.0));
 
 
                 }
