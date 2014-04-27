@@ -89,8 +89,76 @@ beatsviz.viz.bcnRT =  function (options)
 
 
         self.dataLines = [];
+        self.dataPoints = [];
 
 
+
+    };
+
+    self.getIdFromPoint = function(datum,i)
+    {
+        if(datum.type=="instagram")
+        {
+            return datum.data.id;
+        }
+        else
+        {
+            if(datum.type=="bicing")
+            {
+                return datum.data.id;
+            }
+            else
+            {
+                if(datum.type=="twitter")
+                {
+                    return datum.data.id;
+                }
+                else
+                {
+                    if(datum.type=="foursquare")
+                    {
+                        return datum.data.name;
+                    }
+                    else
+                    {
+                        return i;
+                    }
+                }
+            }
+        }
+    };
+
+    self.pointScaleData = function(datum,i)
+    {
+        if(datum.type=="instagram")
+        {
+            return datum.data.likes.count;
+        }
+        else
+        {
+            if(datum.type=="bicing")
+            {
+                return datum.data.slots.occupation;
+            }
+            else
+            {
+                if(datum.type=="twitter")
+                {
+                    return 1.0;
+                }
+                else
+                {
+                    if(datum.type=="foursquare")
+                    {
+                        return datum.data.checkins;
+                    }
+                    else
+                    {
+                        return 1.0;
+                    }
+                }
+            }
+        }
 
     };
 
@@ -101,18 +169,21 @@ beatsviz.viz.bcnRT =  function (options)
         self.data = data;
 
 
-        d3.selectAll(".circleDraw").remove();
+//        d3.selectAll(".circleDraw").remove();
         d3.selectAll(".lineDraw").remove();
 
         // Traffic
 
             self.dataLines.length = 0;
+            self.dataPoints.length = 0;
+
+        // Prepara a dataLines array to attach
+        // And a dataPoints to attach
 
 
             for(var i in self.data)
             {
                 var point = self.data[i];
-
 
                 if(point.type=='traffic')
                 {
@@ -128,13 +199,31 @@ beatsviz.viz.bcnRT =  function (options)
 
 
                 }
+                else
+                {
+                    self.dataPoints.push(point);
+                }
             }
 
 
 
             self.lines = self.svg.selectAll(".lineDraw")
-                                .data(self.dataLines)
-                                .enter().append("svg:line")
+                                .data(self.dataLines);
+
+            self.lines.attr("stroke",function(d,k){
+                    if(d.now>=1.0)
+                    {
+                        return self.sizeScale['trafficC'](d.now+(Math.random()*2)-1);
+                    }
+                    else
+                    {
+                        return self.sizeScale['trafficC'](d.now);
+                    }})
+                .attr("stroke-width",0)
+                        .style("opacity",function(d,k){return self.sizeScale['traffic'](d.now+(Math.random()*2)-1);}).transition().duration(self.transTime).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
+
+
+            var enteringLines = self.lines.enter().insert("svg:line",".circleDraw")
                                     .attr("x1", function(d,j) {
                                             return d.first[0];
                                     })
@@ -158,194 +247,278 @@ beatsviz.viz.bcnRT =  function (options)
                         return self.sizeScale['trafficC'](d.now);
                     }})
                 .attr("stroke-width",0)
-                        .style("opacity",function(d,k){return self.sizeScale['traffic'](d.now+(Math.random()*2)-1);}).transition().duration(self.transTime).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
+                        .style("opacity",function(d,k){return self.sizeScale['traffic'](d.now+(Math.random()*2)-1);});
 
-            var lineas = self.svg.selectAll(".lineDraw");
+            enteringLines.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",function(d,k){var inicial = self.sizeScale['traffic'](d.now+(Math.random()*2)-1); return inicial+";"+(inicial*1.5)+";"+inicial}).attr("dur","2s").attr("repeatCount","indefinite");
 
-//            lineas.style("opacity",0.0);
-//
-             lineas.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",function(d,k){var inicial = self.sizeScale['traffic'](d.now+(Math.random()*2)-1); return inicial+";"+(inicial*1.5)+";"+inicial}).attr("dur","2s").attr("repeatCount","indefinite");
+            enteringLines.transition().duration(100).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
 
 
-
-        // Bicing
-
+        // Points
 
 
-            for(var i in self.data)
-            {
-                var point = self.data[i];
+        self.points = self.svg.selectAll(".circleDraw").data(self.dataPoints,function (d,i){return self.getIdFromPoint(d,i)});
 
-                if(point.type=='bicing')
-                {
 
-                    self.point = self.svg.append("svg:circle")
+        var enteringPoints = self.points.enter().append("svg:circle")
                                     .attr("cx", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+                                            return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+                                           return 0;
                                     })
-                        .attr("r",0)
-                        .style("opacity",0.7)
-                        .attr("class","circleDraw bicing")
-                         .style("fill", function(d, j) {
-                                        return (self.scaleType("bicing"));
+                            .style("opacity",0.0)
+                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
+                        .attr("class",function(d,i){ return "circleDraw " + d.type})
+                        .style("fill", function(d, j) {
+                                        return (self.scaleType(d.type));
                                     });
 
 //                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.stationName+" - "+self.dataPoints[j].data.slots.free+" free slots";});
 
-                        self.point.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['bicing']; return Math.floor(scale(point.data.slots.occupation))});
-
-
-                }
-            }
-
-
-
-            // Twitter
-
-            self.drawPoints = [];
-            self.dataPoints = [];
-
-
-            for(var i in self.data)
+        enteringPoints.each(function(d,i)
+        {
+            if(d.type=="foursquare")
             {
-                var point = self.data[i];
-
-                if(point.type=='twitter')
-                {
-
-
-                    self.point = self.svg.append("svg:circle")
-                                    .attr("cx", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-                                    })
-                                    .attr("cy", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-                                    })
-                        .attr("r",0)
-                        .style("opacity",0.7)
-                        .attr("class","circleDraw twitter")
-                         .style("fill", function(d, j) {
-                                        return (self.scaleType("twitter"));
-                                    });
-
-//                        self.points.append("title").text(function(d,j){return "@"+self.dataPoints[j].data.from_user+" - "+self.dataPoints[j].data.text;});
-
-                        self.point.transition().duration(self.transTime)
-                        .attr("r", self.sizeScale['twitter'](1.0));
-
-
-                }
-            }
-
-
-
-
-        // Foursquare
-
-            for(var i in self.data)
+                d3.select(this).append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",
+            function(d,i)
             {
-                var point = self.data[i];
-
-                if(point.type=='foursquare')
-                {
-
-                    self.point = self.svg.append("svg:circle")
-                                    .attr("cx", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-                                    })
-                                    .attr("cy", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-                                    })
-                        .attr("r",0)
-                        .style("opacity",0.15)
-                        .attr("class","circleDraw foursquare")
-                         .style("fill", function(d, j) {
-                                        return (self.scaleType("foursquare"));
-                                    });
-
-//                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.name + " - " + self.dataPoints[j].data.checkins+" checkins"});
-
-                        self.point.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['foursquare'];return Math.floor(scale(point.data.checkins))});
-
-
-
-                    var seed = 0.1+(Math.random()*0.05);
-                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
-
-                    self.pointSmall = self.svg.append("svg:circle")
-                                    .attr("cx", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-                                    })
-                                    .attr("cy", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-                                    })
-                        .attr("r",1)
-                        .style("opacity",1.0)
-                        .attr("class","circleDraw foursquareSmall")
-                         .style("fill", function(d, j) {
-                                    return "#797";
-                                    });
-
-
-
-                }
-
+                var seed = 0.3+(Math.random()*0.05);
+                return seed+";"+(seed+0.05)+";"+seed;
+            })
+            .attr("dur","3s")
+            .attr("repeatCount","indefinite");
             }
+        });
 
-
-
-
-        // Instagram
-
-
-            for(var i in self.data)
-            {
-                var point = self.data[i];
-
-                if(point.type=='instagram')
-                {
-
-
-                    self.point = self.svg.append("svg:circle")
-                                    .attr("cx", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-                                    })
+        enteringPoints.transition().duration(self.transTime)
                                     .attr("cy", function(d,j) {
-                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-                                    })
-                        .attr("r",0)
-                        .style("opacity",0.7)
-                        .attr("class","circleDraw instagram")
-                         .style("fill", function(d, j) {
-                                        return (self.scaleType("instagram"));
-                                    });
-
-//                        self.points
-//                        .on("click",function(d,i){window.open(d.data.link, '_blank');window.focus();});
-
-//                        self.points.append("title").text(function(d,j){
-//                            if(!self.dataPoints[j].data.caption) {
-//                                return self.dataPoints[j].data.user.username;
-//                            } else {
-//                                return self.dataPoints[j].data.user.username + "- "+ self.dataPoints[j].data.caption.text;
-//                            }
-//                        });
-
-//                    var seed = 0.3+(Math.random()*0.1);
-
-//                    self.points.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.6)+";"+seed).attr("dur","2s").attr("repeatCount","indefinite");
-
-                    self.point.transition().duration(self.transTime)
-                        .attr("r", function(d,j){var scale= self.sizeScale['instagram']; return Math.floor(scale(point.data.likes.count))});
+                                                            return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
+                                                    })
+                                    .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.7;}});
 
 
-                }
-            }
+        self.points.attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
+
+        self.points.exit().transition().duration(self.transTime)
+            .attr("opacity",0.0)
+            .attr("cy",2000).remove();
+
+        console.log("TAMANYOS");
+        console.log(d3.selectAll(".lineDraw").size());
+        console.log(d3.selectAll(".circleDraw").size());
+
+
+
+//        console.log(enteringPoints.selectAll(".foursquare"));
+
+
+//        enteringPoints.classed("foursquare").append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",
+//            function(d,i)
+//            {
+//                console.log(d);
+//                var seed = 0.1+(Math.random()*0.05);
+//                return seed+";"+(seed+0.05)+";"+seed;
+//            })
+//            .attr("dur","3s")
+//            .attr("repeatCount","indefinite");
+//
+
+        //                    var seed = 0.1+(Math.random()*0.05);
+//                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
+//
+//                    self.pointSmall = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",1)
+//                        .style("opacity",1.0)
+//                        .attr("class","circleDraw foursquareSmall")
+//                         .style("fill", function(d, j) {
+//                                    return "#797";
+//                                    });
+
+//        self.points.attr("lala",function(d,i){console.log(d);return "lala"});
+
+
+
+//        // Bicing
+//
+//
+//
+//            for(var i in self.dataPoints)
+//            {
+//                var point = self.dataPoints[i];
+//
+//                if(point.type=='bicing')
+//                {
+//
+//                    self.point = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",0)
+//                        .style("opacity",0.7)
+//                        .attr("class","circleDraw bicing")
+//                         .style("fill", function(d, j) {
+//                                        return (self.scaleType("bicing"));
+//                                    });
+//
+////                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.stationName+" - "+self.dataPoints[j].data.slots.free+" free slots";});
+//
+//                        self.point.transition().duration(self.transTime)
+//                        .attr("r", function(d,j){var scale= self.sizeScale['bicing']; return Math.floor(scale(point.data.slots.occupation))});
+//
+//
+//                }
+//            }
+//
+//
+//
+//            // Twitter
+//
+//            for(var i in self.dataPoints)
+//            {
+//                var point = self.dataPoints[i];
+//
+//                if(point.type=='twitter')
+//                {
+//
+//
+//                    self.point = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",0)
+//                        .style("opacity",0.7)
+//                        .attr("class","circleDraw twitter")
+//                         .style("fill", function(d, j) {
+//                                        return (self.scaleType("twitter"));
+//                                    });
+//
+////                        self.points.append("title").text(function(d,j){return "@"+self.dataPoints[j].data.from_user+" - "+self.dataPoints[j].data.text;});
+//
+//                        self.point.transition().duration(self.transTime)
+//                        .attr("r", self.sizeScale['twitter'](1.0));
+//
+//
+//                }
+//            }
+//
+//
+//
+//
+//        // Foursquare
+//
+//            for(var i in self.dataPoints)
+//            {
+//                var point = self.dataPoints[i];
+//
+//                if(point.type=='foursquare')
+//                {
+//
+//                    self.point = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",0)
+//                        .style("opacity",0.15)
+//                        .attr("class","circleDraw foursquare")
+//                         .style("fill", function(d, j) {
+//                                        return (self.scaleType("foursquare"));
+//                                    });
+//
+////                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.name + " - " + self.dataPoints[j].data.checkins+" checkins"});
+//
+//                        self.point.transition().duration(self.transTime)
+//                        .attr("r", function(d,j){var scale= self.sizeScale['foursquare'];return Math.floor(scale(point.data.checkins))});
+//
+//
+//
+//                    var seed = 0.1+(Math.random()*0.05);
+//                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
+//
+//                    self.pointSmall = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",1)
+//                        .style("opacity",1.0)
+//                        .attr("class","circleDraw foursquareSmall")
+//                         .style("fill", function(d, j) {
+//                                    return "#797";
+//                                    });
+//
+//
+//
+//                }
+//
+//            }
+//
+//
+//
+//
+//        // Instagram
+//
+//
+//            for(var i in self.dataPoints)
+//            {
+//                var point = self.dataPoints[i];
+//
+//                if(point.type=='instagram')
+//                {
+//
+//
+//                    self.point = self.svg.append("svg:circle")
+//                                    .attr("cx", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
+//                                    })
+//                                    .attr("cy", function(d,j) {
+//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
+//                                    })
+//                        .attr("r",0)
+//                        .style("opacity",0.7)
+//                        .attr("class","circleDraw instagram")
+//                         .style("fill", function(d, j) {
+//                                        return (self.scaleType("instagram"));
+//                                    });
+//
+////                        self.points
+////                        .on("click",function(d,i){window.open(d.data.link, '_blank');window.focus();});
+//
+////                        self.points.append("title").text(function(d,j){
+////                            if(!self.dataPoints[j].data.caption) {
+////                                return self.dataPoints[j].data.user.username;
+////                            } else {
+////                                return self.dataPoints[j].data.user.username + "- "+ self.dataPoints[j].data.caption.text;
+////                            }
+////                        });
+//
+////                    var seed = 0.3+(Math.random()*0.1);
+//
+////                    self.points.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.6)+";"+seed).attr("dur","2s").attr("repeatCount","indefinite");
+//
+//                    self.point.transition().duration(self.transTime)
+//                        .attr("r", function(d,j){var scale= self.sizeScale['instagram']; return Math.floor(scale(point.data.likes.count))});
+//
+//
+//                }
+//            }
 
 
         // El remove del warning esta al final porque el primer render tarda...
