@@ -274,14 +274,18 @@ beatsviz.viz.bcnRT =  function (options)
                                             return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
                                     })
                                     .attr("cy", function(d,j) {
-                                           return 0;
-                                    })
-                            .style("opacity",0.0)
-                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
+                                                            return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
+                                                    })
+                                    .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.7;}})
+                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i))*3);})
                         .attr("class",function(d,i){ return "circleDraw " + d.type})
                         .style("fill", function(d, j) {
                                         return (self.scaleType(d.type));
-                                    });
+                                    })
+                                    .style("stroke","white")
+            .style("stroke-width",function(d,i){return d3.select(this).attr("r")/10;})
+            .style("stroke-opacity",1.0);
+
 
 //                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.stationName+" - "+self.dataPoints[j].data.slots.free+" free slots";});
 
@@ -301,10 +305,9 @@ beatsviz.viz.bcnRT =  function (options)
         });
 
         enteringPoints.transition().duration(self.transTime)
-                                    .attr("cy", function(d,j) {
-                                                            return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
-                                                    })
-                                    .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.7;}});
+                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
+            .style("stroke-width",0.0);
+
 
 
 
