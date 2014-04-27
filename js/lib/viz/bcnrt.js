@@ -210,6 +210,8 @@ beatsviz.viz.bcnRT =  function (options)
             self.lines = self.svg.selectAll(".lineDraw")
                                 .data(self.dataLines);
 
+            self.lines.exit().remove();
+
             self.lines.attr("stroke",function(d,k){
                     if(d.now>=1.0)
                     {
@@ -259,6 +261,13 @@ beatsviz.viz.bcnRT =  function (options)
 
         self.points = self.svg.selectAll(".circleDraw").data(self.dataPoints,function (d,i){return self.getIdFromPoint(d,i)});
 
+        self.points.exit().transition().duration(self.transTime)
+            .attr("opacity",0.0)
+            .attr("cy",2000).remove();
+
+        self.points.attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));});
+
+
 
         var enteringPoints = self.points.enter().append("svg:circle")
                                     .attr("cx", function(d,j) {
@@ -298,11 +307,7 @@ beatsviz.viz.bcnRT =  function (options)
                                     .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.7;}});
 
 
-        self.points.attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
 
-        self.points.exit().transition().duration(self.transTime)
-            .attr("opacity",0.0)
-            .attr("cy",2000).remove();
 
         console.log("TAMANYOS");
         console.log(d3.selectAll(".lineDraw").size());
