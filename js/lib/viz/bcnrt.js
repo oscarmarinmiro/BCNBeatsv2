@@ -161,7 +161,7 @@ beatsviz.viz.bcnRT =  function (options)
                 var myX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
                 var myY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
 
-                if (myX>self.width*0.2 && myX < self.width*0.8 && myY>self.height*0.2 && myY<self.height*0.8)
+                if (myX>self.width*0.2 && myX < self.width*0.8 && myY>self.height*0.2 && myY<self.height*0.9)
                 {
 
                     var original = d3.select(this);
