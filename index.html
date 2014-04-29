@@ -38,7 +38,7 @@
                     'trafficW': d3.scale.linear().domain([0,4]).range([0.5,0.5]).clamp(true),
 //                    'trafficC': d3.scale.linear().domain([0,4]).range(["yellow","red"]).clamp(true),
                     'trafficC': d3.scale.linear().domain([0,4]).range(["white","white"]),
-                    'bicing': d3.scale.sqrt().domain([1,0]).range([1.5,1.5]).clamp(true),
+                    'bicing': d3.scale.sqrt().domain([1,0]).range([2.5,2.5]).clamp(true),
                     'twitter': d3.scale.sqrt().domain([0,1]).range([5,5]).clamp(true),
                     'instagram': d3.scale.sqrt().domain([0,100]).range([5,5]).clamp(true)
 
@@ -53,7 +53,7 @@
                             'urlBase': "http://assets.outliers.es/bcnrtweb/data.json",
                             'captionRatio': 4,
                             'scaleType':scaleType,
-                            'transTime':2000,
+                            'transTime':1000,
                             'sizeScale':sizeScale,
                             'refreshInt':30000,
                             'debugLevel':1

@@ -127,96 +127,119 @@ beatsviz.viz.bcnRT =  function (options)
 
     self.showInfos = function()
     {
-        console.log("show infos");
 
-        var elements = self.svg.selectAll(".circleDraw").filter(function(d,i) {return d.type!="bicing"});
+        var type = Math.floor(Math.random()*3);
+
+
+        var elements;
+
+        if(type==0)
+        {
+            elements = self.svg.selectAll(".circleDraw.instagram").filter(function(d,i) {return d.type!="bicing"});
+        }
+
+        if(type==1)
+        {
+            elements = self.svg.selectAll(".circleDraw.twitter").filter(function(d,i) {return d.type!="bicing"});
+        }
+
+        if(type==2)
+        {
+            elements = self.svg.selectAll(".circleDraw.foursquare").filter(function(d,i) {return d.type!="bicing"});
+        }
+
 
         var size = elements.size();
 
-        console.log(size);
-
         var chosen = Math.floor(Math.random()*size);
 
-        console.log(chosen);
 
         elements.filter(function(d, i) { return i==chosen})
             .each(function(d,i){
 
-                var original = d3.select(this);
 
-                var myOrigX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
-                var myOrigY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
+                var myX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
+                var myY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
 
-                var myX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0])-150;
-                var myY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1])-75;
-
-                var myRadius = original.attr("r");
-                var origX = original.attr("cx");
-                var origY = original.attr("cy");
-
-                var myG = self.svg.append("g").attr("class","captions").attr("transform","translate("+myX+","+myY+")");
-
-                var myHalo = self.svg.append("circle")
-                    .attr("cx",origX)
-                    .attr("cy",origY)
-                    .attr("r", myRadius*2.0)
-                    .style("stroke","white")
-                    .style("stroke-width","2px")
-                    .style("stroke-opacity",1.0)
-                    .style("fill-opacity",0.0);
-
-//                var forHeader = '<foreignobject><body xmlns="http://www.w3.org/1999/xhtml"><div class="captionText">';
-//                var forFooter = '</div></foreignobject>';
-
-
-                if(d.type=="twitter")
+                if (myX>self.width*0.2 && myX < self.width*0.8 && myY>self.height*0.2 && myY<self.height*0.8)
                 {
-                   var foreign = myG.append("foreignObject")
-                     .attr("width", 300)
-                     .attr("height", 100)
-                    .append("xhtml:div").attr("class","captionText");
 
-                    var myText = "@"+d.data.user.screen_name+" - "+d.data.text;
+                    var original = d3.select(this);
 
-                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
-                    foreign.html(myText);
+                    original.style("stroke-width","2px").style("stroke-opacity",1.0).style("stroke","white");
+
+
+                    var myRadius = original.attr("r");
+                    var origX = original.attr("cx");
+                    var origY = original.attr("cy");
+
+                    var originalOpacity = original.style("opacity");
+
+
+                    var myG;
+
+
+                    var myHalo = self.svg.append("circle")
+                        .attr("cx",origX)
+                        .attr("cy",origY)
+                        .attr("r", myRadius*2.0)
+                        .style("stroke","white")
+                        .style("stroke-width","2px")
+                        .style("stroke-opacity",1.0)
+                        .style("fill-opacity",0.0);
+
+
+                    if(d.type=="twitter")
+                    {
+
+                       myG = self.svg.append("g").attr("class","captions").attr("transform","translate("+(myX-150)+","+(myY-75)+")");
+
+                       var foreign = myG.append("foreignObject")
+                         .attr("width", 300)
+                         .attr("height", 100)
+                        .append("xhtml:div").attr("class","captionText");
+
+                        var myText = "@"+d.data.user.screen_name+" - "+d.data.text;
+
+                        //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
+                        foreign.html(myText);
+                    }
+
+                    if(d.type=="foursquare")
+                    {
+                       myG = self.svg.append("g").attr("class","captions").attr("transform","translate("+(myX-150)+","+(myY-myRadius-100)+")");
+
+                       var foreign = myG.append("foreignObject")
+                         .attr("width", 300)
+                         .attr("height", 100)
+                        .append("xhtml:div").attr("class","captionText");
+
+                        var myText = "<b>"+d.data.name+"</b></br> "+d.data.venueType+" </br> "+ d.data.checkins+" checkins";
+
+                        //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
+                        foreign.html(myText);
+
+                    }
+                    if(d.type=="instagram")
+                    {
+                       myG = self.svg.append("g").attr("class","captions").attr("transform","translate("+(myX-85)+","+(myY-200)+")");
+
+                       var foreign = myG.append("foreignObject")
+                         .attr("width", 170)
+                         .attr("height", 170)
+                        .append("xhtml:div").attr("class","captionText");
+
+                        myText = "<img src='" + d.data.images.thumbnail.url +"'>";
+
+                        foreign.html(myText);
+
+                    }
+
+                    myG.transition().delay(self.transTime*3).duration(self.transTime).style("opacity",0.0).remove();
+                    myHalo.transition().delay(self.transTime*3).duration(self.transTime).style("opacity",0.0).remove();
+                    original.transition().delay(self.transTime*3).duration(self.transTime).style("stroke-width",0.0);
+
                 }
-
-                if(d.type=="foursquare")
-                {
-                   var foreign = myG.append("foreignObject")
-                     .attr("width", 150)
-                     .attr("height", 100)
-                    .append("xhtml:div").attr("class","captionText");
-
-                    var myText = d.data.name+" - "+d.data.venueType+" - "+ d.data.checkins+" checkins";
-
-                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
-                    foreign.html(myText);
-
-                }
-                if(d.type=="instagram")
-                {
-                    console.log("INSTAGRAM!!");
-                    console.log(d);
-                   var foreign = myG.append("foreignObject")
-                     .attr("width", 170)
-                     .attr("height", 170)
-                    .append("xhtml:div").attr("class","captionText");
-//
-//                    var myText = d.data.name+" - "+d.data.venueType+" - "+ d.data.checkins+" checkins";
-
-                    myText = "<img src='" + d.data.images.thumbnail.url +"</img>";
-
-//                    console.log(myText);
-//                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
-                    foreign.html(myText);
-
-                }
-
-//                myG.transition().duration(self.transTime*5).style("opacity",0.0).attr("transform","translate("+myX+","+(myY-20)+")").remove();
-                myG.transition().duration(self.transTime*5).style("opacity",0.0).remove();
-                myHalo.transition().duration(self.transTime*5).style("opacity",0.0).remove();
 
             });
     };
@@ -357,7 +380,6 @@ beatsviz.viz.bcnRT =  function (options)
         self.points.exit().transition().duration(self.transTime)
             .attr("opacity",0.0)
             .attr("r",0.0).remove();
-//            .attr("cy",function (d,i){console.log("removing"); return 1000;}).remove();
 
         self.points.attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));});
 
@@ -370,8 +392,8 @@ beatsviz.viz.bcnRT =  function (options)
                                     .attr("cy", function(d,j) {
                                                             return Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
                                                     })
-                                    .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.7;}})
-                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i))*3);})
+                                    .style("opacity",function(d,i){ if (d.type=="foursquare"){return 0.3;} else {return 0.5;}})
+                            .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
                         .attr("class",function(d,i){ return "circleDraw " + d.type})
                         .style("fill", function(d, j) {
                                         return (self.scaleType(d.type));
@@ -401,226 +423,6 @@ beatsviz.viz.bcnRT =  function (options)
         enteringPoints.transition().duration(self.transTime)
                             .attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));})
             .style("stroke-width",0.0);
-
-
-
-
-
-//        console.log("TAMANYOS");
-//        console.log(d3.selectAll(".lineDraw").size());
-//        console.log(d3.selectAll(".circleDraw").size());
-
-
-
-//        console.log(enteringPoints.selectAll(".foursquare"));
-
-
-//        enteringPoints.classed("foursquare").append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",
-//            function(d,i)
-//            {
-//                console.log(d);
-//                var seed = 0.1+(Math.random()*0.05);
-//                return seed+";"+(seed+0.05)+";"+seed;
-//            })
-//            .attr("dur","3s")
-//            .attr("repeatCount","indefinite");
-//
-
-        //                    var seed = 0.1+(Math.random()*0.05);
-//                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
-//
-//                    self.pointSmall = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",1)
-//                        .style("opacity",1.0)
-//                        .attr("class","circleDraw foursquareSmall")
-//                         .style("fill", function(d, j) {
-//                                    return "#797";
-//                                    });
-
-//        self.points.attr("lala",function(d,i){console.log(d);return "lala"});
-
-
-
-//        // Bicing
-//
-//
-//
-//            for(var i in self.dataPoints)
-//            {
-//                var point = self.dataPoints[i];
-//
-//                if(point.type=='bicing')
-//                {
-//
-//                    self.point = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",0)
-//                        .style("opacity",0.7)
-//                        .attr("class","circleDraw bicing")
-//                         .style("fill", function(d, j) {
-//                                        return (self.scaleType("bicing"));
-//                                    });
-//
-////                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.stationName+" - "+self.dataPoints[j].data.slots.free+" free slots";});
-//
-//                        self.point.transition().duration(self.transTime)
-//                        .attr("r", function(d,j){var scale= self.sizeScale['bicing']; return Math.floor(scale(point.data.slots.occupation))});
-//
-//
-//                }
-//            }
-//
-//
-//
-//            // Twitter
-//
-//            for(var i in self.dataPoints)
-//            {
-//                var point = self.dataPoints[i];
-//
-//                if(point.type=='twitter')
-//                {
-//
-//
-//                    self.point = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",0)
-//                        .style("opacity",0.7)
-//                        .attr("class","circleDraw twitter")
-//                         .style("fill", function(d, j) {
-//                                        return (self.scaleType("twitter"));
-//                                    });
-//
-////                        self.points.append("title").text(function(d,j){return "@"+self.dataPoints[j].data.from_user+" - "+self.dataPoints[j].data.text;});
-//
-//                        self.point.transition().duration(self.transTime)
-//                        .attr("r", self.sizeScale['twitter'](1.0));
-//
-//
-//                }
-//            }
-//
-//
-//
-//
-//        // Foursquare
-//
-//            for(var i in self.dataPoints)
-//            {
-//                var point = self.dataPoints[i];
-//
-//                if(point.type=='foursquare')
-//                {
-//
-//                    self.point = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",0)
-//                        .style("opacity",0.15)
-//                        .attr("class","circleDraw foursquare")
-//                         .style("fill", function(d, j) {
-//                                        return (self.scaleType("foursquare"));
-//                                    });
-//
-////                        self.points.append("title").text(function(d,j){return self.dataPoints[j].data.name + " - " + self.dataPoints[j].data.checkins+" checkins"});
-//
-//                        self.point.transition().duration(self.transTime)
-//                        .attr("r", function(d,j){var scale= self.sizeScale['foursquare'];return Math.floor(scale(point.data.checkins))});
-//
-//
-//
-//                    var seed = 0.1+(Math.random()*0.05);
-//                    self.point.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.05)+";"+seed).attr("dur","3s").attr("repeatCount","indefinite");
-//
-//                    self.pointSmall = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",1)
-//                        .style("opacity",1.0)
-//                        .attr("class","circleDraw foursquareSmall")
-//                         .style("fill", function(d, j) {
-//                                    return "#797";
-//                                    });
-//
-//
-//
-//                }
-//
-//            }
-//
-//
-//
-//
-//        // Instagram
-//
-//
-//            for(var i in self.dataPoints)
-//            {
-//                var point = self.dataPoints[i];
-//
-//                if(point.type=='instagram')
-//                {
-//
-//
-//                    self.point = self.svg.append("svg:circle")
-//                                    .attr("cx", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[0]);
-//                                    })
-//                                    .attr("cy", function(d,j) {
-//                                            return Math.floor(self.projection([point.geo.info.lng, point.geo.info.lat])[1]);
-//                                    })
-//                        .attr("r",0)
-//                        .style("opacity",0.7)
-//                        .attr("class","circleDraw instagram")
-//                         .style("fill", function(d, j) {
-//                                        return (self.scaleType("instagram"));
-//                                    });
-//
-////                        self.points
-////                        .on("click",function(d,i){window.open(d.data.link, '_blank');window.focus();});
-//
-////                        self.points.append("title").text(function(d,j){
-////                            if(!self.dataPoints[j].data.caption) {
-////                                return self.dataPoints[j].data.user.username;
-////                            } else {
-////                                return self.dataPoints[j].data.user.username + "- "+ self.dataPoints[j].data.caption.text;
-////                            }
-////                        });
-//
-////                    var seed = 0.3+(Math.random()*0.1);
-//
-////                    self.points.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",seed+";"+(seed+0.6)+";"+seed).attr("dur","2s").attr("repeatCount","indefinite");
-//
-//                    self.point.transition().duration(self.transTime)
-//                        .attr("r", function(d,j){var scale= self.sizeScale['instagram']; return Math.floor(scale(point.data.likes.count))});
-//
-//
-//                }
-//            }
 
 
         // El remove del warning esta al final porque el primer render tarda...
