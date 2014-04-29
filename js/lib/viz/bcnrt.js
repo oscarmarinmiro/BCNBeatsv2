@@ -312,9 +312,9 @@ beatsviz.viz.bcnRT =  function (options)
 
 
 
-        console.log("TAMANYOS");
-        console.log(d3.selectAll(".lineDraw").size());
-        console.log(d3.selectAll(".circleDraw").size());
+//        console.log("TAMANYOS");
+//        console.log(d3.selectAll(".lineDraw").size());
+//        console.log(d3.selectAll(".circleDraw").size());
 
 
 

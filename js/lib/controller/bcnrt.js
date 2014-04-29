@@ -95,8 +95,6 @@ beatsviz.controller.bcnRT = function(options)
            {
                self.netData = netData;
 
-
-
                // primer render
 
                self.bcnChart.render(self.netData);
@@ -104,11 +102,14 @@ beatsviz.controller.bcnRT = function(options)
                $('#showTime').html(moment().format('H:mm:ss'));
                $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
 
-
+               self.dateInterval = null;
+               self.dataInterval = null;
 
 
                self.refreshData = function ()
                {
+//                    console.log("refreshData");
+
                            d3.json(self.urlBase, function(netData)
                             {
                                 if(netData!=null)
@@ -123,18 +124,63 @@ beatsviz.controller.bcnRT = function(options)
                                            $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
 
                                 }
+
                             });
                };
 
                self.refreshDate = function()
                {
+//                    console.log("refreshDate");
                     $('#showTime').html(moment().format('H:mm:ss'));
                     $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
+
                };
 
-               setInterval(self.refreshData, self.refreshInt);
 
-               setInterval(self.refreshDate, 1000);
+               self.dataInterval = setInterval(self.refreshData, self.refreshInt);
+
+               self.dateInterval = setInterval(self.refreshDate, 1000);
+
+//               console.log("JUST AFTER SET");
+//               console.log(self.dataInterval);
+//               console.log(self.dateInterval);
+
+               $(window).blur(function(){
+                   clearTimeout(self.dataInterval);
+                   clearTimeout(self.dateInterval);
+
+                   self.dateInterval = null;
+                   self.dataInterval = null;
+
+//                   console.log("BLUR...");
+
+//                   console.log(self.dataInterval);
+//                   console.log(self.dataInterval);
+//                   console.log(self.dateInterval);
+
+               });
+
+               $(window).focus(function(){
+
+//                   console.log("FOCUS...");
+
+                   clearTimeout(self.dataInterval);
+                   clearTimeout(self.dateInterval);
+
+                   if(!self.dateInterval)
+                   {
+                        self.dateInterval = setInterval(self.refreshDate, 1000);
+                   }
+
+                   if(!self.dataInterval)
+                   {
+                        self.dataInterval = setInterval(self.refreshData, self.refreshInt);
+                   }
+
+//                   console.log(self.dataInterval);
+//                   console.log(self.dateInterval);
+               });
+
 
 
            }
