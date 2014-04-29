@@ -450,6 +450,23 @@ body * {
 .bcnRT a {
   color: #777;
 }
+
+/* Caption texts */
+
+.bcnRT .captionText{
+    font-size:12px;
+    fill: white;
+    color: white;
+    font-family: 'Open Sans', Times, serif;
+    text-align:justify;
+    background: rgba(25, 25, 25, .8);
+    /*background-color: #CCC;*/
+    padding:10px;
+    border-color: #CCC;
+    border-width: 1px;
+
+   }
+
 #infoDiv {
   position: absolute;
   color: #FFF;

@@ -90,9 +90,6 @@ beatsviz.viz.bcnRT =  function (options)
 
         self.dataLines = [];
         self.dataPoints = [];
-
-
-
     };
 
     self.getIdFromPoint = function(datum,i)
@@ -126,6 +123,102 @@ beatsviz.viz.bcnRT =  function (options)
                 }
             }
         }
+    };
+
+    self.showInfos = function()
+    {
+        console.log("show infos");
+
+        var elements = self.svg.selectAll(".circleDraw").filter(function(d,i) {return d.type!="bicing"});
+
+        var size = elements.size();
+
+        console.log(size);
+
+        var chosen = Math.floor(Math.random()*size);
+
+        console.log(chosen);
+
+        elements.filter(function(d, i) { return i==chosen})
+            .each(function(d,i){
+
+                var original = d3.select(this);
+
+                var myOrigX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0]);
+                var myOrigY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1]);
+
+                var myX =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[0])-150;
+                var myY =  Math.floor(self.projection([d.geo.info.lng, d.geo.info.lat])[1])-75;
+
+                var myRadius = original.attr("r");
+                var origX = original.attr("cx");
+                var origY = original.attr("cy");
+
+                var myG = self.svg.append("g").attr("class","captions").attr("transform","translate("+myX+","+myY+")");
+
+                var myHalo = self.svg.append("circle")
+                    .attr("cx",origX)
+                    .attr("cy",origY)
+                    .attr("r", myRadius*2.0)
+                    .style("stroke","white")
+                    .style("stroke-width","2px")
+                    .style("stroke-opacity",1.0)
+                    .style("fill-opacity",0.0);
+
+//                var forHeader = '<foreignobject><body xmlns="http://www.w3.org/1999/xhtml"><div class="captionText">';
+//                var forFooter = '</div></foreignobject>';
+
+
+                if(d.type=="twitter")
+                {
+                   var foreign = myG.append("foreignObject")
+                     .attr("width", 300)
+                     .attr("height", 100)
+                    .append("xhtml:div").attr("class","captionText");
+
+                    var myText = "@"+d.data.user.screen_name+" - "+d.data.text;
+
+                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
+                    foreign.html(myText);
+                }
+
+                if(d.type=="foursquare")
+                {
+                   var foreign = myG.append("foreignObject")
+                     .attr("width", 150)
+                     .attr("height", 100)
+                    .append("xhtml:div").attr("class","captionText");
+
+                    var myText = d.data.name+" - "+d.data.venueType+" - "+ d.data.checkins+" checkins";
+
+                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
+                    foreign.html(myText);
+
+                }
+                if(d.type=="instagram")
+                {
+                    console.log("INSTAGRAM!!");
+                    console.log(d);
+                   var foreign = myG.append("foreignObject")
+                     .attr("width", 170)
+                     .attr("height", 170)
+                    .append("xhtml:div").attr("class","captionText");
+//
+//                    var myText = d.data.name+" - "+d.data.venueType+" - "+ d.data.checkins+" checkins";
+
+                    myText = "<img src='" + d.data.images.thumbnail.url +"</img>";
+
+//                    console.log(myText);
+//                    //myG.append("text").text(myText).attr("class","captionText").attr("text-anchor","middle");
+                    foreign.html(myText);
+
+                }
+
+//                myG.transition().duration(self.transTime*5).style("opacity",0.0).attr("transform","translate("+myX+","+(myY-20)+")").remove();
+                myG.transition().duration(self.transTime*5).style("opacity",0.0).remove();
+                myHalo.transition().duration(self.transTime*5).style("opacity",0.0).remove();
+
+            });
     };
 
     self.pointScaleData = function(datum,i)
@@ -170,7 +263,7 @@ beatsviz.viz.bcnRT =  function (options)
 
 
 //        d3.selectAll(".circleDraw").remove();
-        d3.selectAll(".lineDraw").remove();
+          d3.selectAll(".lineDraw").remove();
 
         // Traffic
 
@@ -222,7 +315,7 @@ beatsviz.viz.bcnRT =  function (options)
                         return self.sizeScale['trafficC'](d.now);
                     }})
                 .attr("stroke-width",0)
-                        .style("opacity",function(d,k){return self.sizeScale['traffic'](d.now+(Math.random()*2)-1);}).transition().duration(self.transTime).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
+                        .style("opacity",function(d,k){return self.sizeScale['traffic'](d.now+(Math.random()*2)-1);}).transition().duration(10).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
 
 
             var enteringLines = self.lines.enter().insert("svg:line",".circleDraw")
@@ -253,7 +346,7 @@ beatsviz.viz.bcnRT =  function (options)
 
             enteringLines.append("animate").attr("attributeName","opacity").attr("attributeType","XML").attr("values",function(d,k){var inicial = self.sizeScale['traffic'](d.now+(Math.random()*2)-1); return inicial+";"+(inicial*1.5)+";"+inicial}).attr("dur","2s").attr("repeatCount","indefinite");
 
-            enteringLines.transition().duration(100).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
+            enteringLines.transition().duration(10).attr("stroke-width",function(d,k){return self.sizeScale['trafficW'](d.now+(Math.random()*2)-1);});
 
 
         // Points
@@ -263,7 +356,8 @@ beatsviz.viz.bcnRT =  function (options)
 
         self.points.exit().transition().duration(self.transTime)
             .attr("opacity",0.0)
-            .attr("cy",2000).remove();
+            .attr("r",0.0).remove();
+//            .attr("cy",function (d,i){console.log("removing"); return 1000;}).remove();
 
         self.points.attr("r", function(d,j){var scale= self.sizeScale[d.type]; return Math.floor(scale(self.pointScaleData(d,i)));});
 

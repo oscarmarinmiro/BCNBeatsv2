@@ -45,6 +45,8 @@ beatsviz.controller.bcnRT = function(options)
 
         $.ajaxSetup({cache: true});
 
+        self.captionCounter = 0;
+
         // Inyecto el html en el div padre
 
         var injectString =
@@ -133,6 +135,14 @@ beatsviz.controller.bcnRT = function(options)
 //                    console.log("refreshDate");
                     $('#showTime').html(moment().format('H:mm:ss'));
                     $('#showTimeBelow').html(moment().format('MMMM Do YYYY'));
+
+                   if(self.captionCounter%self.captionRatio==0)
+                   {
+
+                    self.bcnChart.showInfos();
+                   }
+
+                   self.captionCounter++;
 
                };
 
