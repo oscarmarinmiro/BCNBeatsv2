@@ -459,7 +459,7 @@ body * {
     color: white;
     font-family: 'Open Sans', Times, serif;
     text-align:justify;
-    background: rgba(25, 25, 25, .9);
+    background: rgba(0, 0, 0, 1.0);
     /*background-color: #CCC;*/
     padding:10px;
     border-color: #CCC;
