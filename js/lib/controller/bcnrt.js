@@ -52,7 +52,8 @@ beatsviz.controller.bcnRT = function(options)
         var injectString =
             ['<div id="contenedorTodo" class="wrapper">',
                 '<header>',
-                  '<h1>BCN<span>Beats</span></h1>',
+//                  '<h1>BCN<span>Beats</span></h1>',
+                    '<img src="img/BCNBeats_logo.png">',
                 '</header>',
                 '<div id="header2"><span class="opcionesContent" id="showTime">--:--:--</span></div>',
                 '<div id="header3"><span class="opcionesContent" id="showTimeBelow">----/--/--</span></div>',
@@ -63,6 +64,8 @@ beatsviz.controller.bcnRT = function(options)
                       '<div id="legendContent" class="legendContent"></div>',
                     '</div>',
                 '</div>',
+                '<div id="footer1"><img src="img/BCNBeats_leyenda.png"></div>',
+                '<div id="footer2"><span style="font-weight:600">Credits</span></br><a href="http://www.outliers.es" target="_blank">Outliers Collective:</a> Concept, Data, Backend, Frontend</br> <span style="color:#CCC;">Rocío Márquez, Patricia Benítez:</span> Design</div>',
              '</div>'
             ].join('\n');
 

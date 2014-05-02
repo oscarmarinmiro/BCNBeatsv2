@@ -158,6 +158,7 @@ table {
 html,
 body {
   height: 100%;
+    background: #111;
 }
 body {
   cursor: default;
@@ -177,6 +178,7 @@ body * {
 .bcnRT {
   width: 100%;
   height: 100%;
+  background: #111;
 }
 .bcnRT .wrapper {
   position: relative;
@@ -185,16 +187,44 @@ body * {
   margin-right: auto;
   width: 100%;
   height: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
 }
 .bcnRT .wrapper header {
   position: absolute;
-  opacity: 0.8;
+  opacity: 1.0;
   z-index: 9;
   width: 100%;
   /*background-color: rgba(0, 0, 0, 0.5);*/
   padding: 10px 20px;
 }
+
+#footer1
+{
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 9;
+}
+
+#footer2
+{
+    position: absolute;
+    right: 20px;
+    bottom: 45px;
+    z-index: 9;
+    color: #FFF;
+    font-size:10px;
+    font-family: 'Open Sans';
+    text-align:right;
+
+}
+
+#footer2 a
+{
+    text-decoration: none;
+    color: #CCC;
+}
+
 
 #header2
 {
@@ -282,7 +312,7 @@ body * {
 .bcnRT .wrapper .chartContent {
   width: 100%;
   height: 700px;
-  background: #111 url(../img/bcn_back_map2.png) no-repeat 50% 50%;
+      background: #111 url(../img/bcn_back_map2.png) no-repeat 50% 50%;
   -webkit-background-clip: border-box;
   -moz-background-clip: border-box;
   background-clip: border-box;
@@ -306,6 +336,12 @@ body * {
   font-weight: 700;
   line-height: 1.5em;
 }
+
+.zonaInfo
+{
+    display:none;
+}
+
 .bcnRT .wrapper .zonaInfo .legend .legendContent {
   margin-top: -15px;
 }
