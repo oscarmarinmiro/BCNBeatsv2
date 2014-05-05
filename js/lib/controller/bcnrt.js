@@ -65,7 +65,7 @@ beatsviz.controller.bcnRT = function(options)
                     '</div>',
                 '</div>',
                 '<div id="footer1"><img src="img/BCNBeats_leyendav2.png"></div>',
-                '<div id="footer2"><span style="font-weight:600">Credits for this version</span></br><a href="http://www.outliers.es" target="_blank">Outliers Collective:</a> Concept, Data, Backend, Frontend</br> <span style="color:#CCC;">Rocío Márquez, Patricia Benítez:</span> Design</br><span style="color:#CCC;">More info <a href="http://vimeo.com/65518726" target="_blank">here</a></span></div>',
+                '<div id="footer2"><span style="font-weight:600">Credits for this version</span></br><a href="http://www.outliers.es" target="_blank">Outliers Collective:</a> Concept, Data, Backend, Frontend</br> <span style="color:#CCC;">Rocío Márquez, Patricia Benítez:</span> Design</br><span style="color:#CCC;"><a href="http://vimeo.com/65518726" target="_blank">More info here</a></span></div>',
              '</div>'
             ].join('\n');
 
